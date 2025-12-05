@@ -23,7 +23,7 @@ const HomeScreen = ({ navigation }) => {
         <Text style={styles.appTitle}>
           PackMate <Text style={styles.aiHighlight}>AI</Text>
         </Text>
-        <Text style={styles.subtitle}>Welcome, Alex. Ready to ship?</Text>
+        <Text style={styles.subtitle}>Welcome, Okasha. Ready to pack?</Text>
       </View>
 
       {/* SCAN NEW PRODUCT CARD */}
