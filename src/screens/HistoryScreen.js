@@ -1,111 +1,115 @@
 import React from "react";
-import { 
-  View, 
-  Text, 
-  StyleSheet, 
-  FlatList, 
-  Image, 
-  TouchableOpacity, 
-  SafeAreaView, 
-  Dimensions 
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Image,
+  TouchableOpacity,
 } from "react-native";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useScans } from "../Context/ScanContext";
-
-const { width } = Dimensions.get('window');
+import { scale, verticalScale, responsiveFont } from "../utils/responsive";
 
 const HistoryScreen = ({ navigation }) => {
-  const { historyScans, theme } = useScans();
-
-  const colors = theme === 'dark' ? {
-    background: '#121212',
-    text: '#fff',
-    subText: '#ccc',
-    card: '#1e1e1e'
-  } : {
-    background: '#F8F9FA',
-    text: '#1a1a1a',
-    subText: '#666',
-    card: '#fff'
-  };
+  const { historyScans } = useScans();
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
+      
       {/* HEADER */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={28} color={colors.text} />
-        </TouchableOpacity>
-
-        <Text style={[styles.headerTitle, { color: colors.text }]}>Scan History</Text>
-
-        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-          <Ionicons name="home" size={28} color={colors.text} />
-        </TouchableOpacity>
+        <Ionicons name="time" size={28} color="#333" />
+        <Text style={styles.headerTitle}>HISTORY</Text>
+        <View style={{ width: 28 }} />
       </View>
 
+      {/* EMPTY STATE */}
       {historyScans.length === 0 ? (
         <View style={styles.empty}>
-          <Ionicons name="folder-open" size={60} color={colors.subText} />
-          <Text style={[styles.emptyText, { color: colors.subText }]}>No history yet</Text>
+          <Ionicons name="folder-open" size={scale(60)} color="#888" />
+          <Text style={styles.emptyText}>No history yet</Text>
         </View>
       ) : (
         <FlatList
-          contentContainerStyle={{ padding: 15, paddingBottom: 120 }}
+          contentContainerStyle={{ paddingBottom: verticalScale(30) }}
           data={historyScans}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
-            <TouchableOpacity style={[styles.card, { backgroundColor: colors.card }]}>
+            <View style={styles.card}>
               <Image source={{ uri: item.imageUri }} style={styles.image} />
-              <View style={{ flex: 1, marginLeft: 12 }}>
-                <Text style={[styles.cardTitle, { color: colors.text }]}>{item.title}</Text>
-                <Text style={[styles.details, { color: colors.subText }]}>{item.details}</Text>
+              <View style={{ marginLeft: scale(12), flex: 1 }}>
+                <Text style={styles.cardTitle}>{item.title}</Text>
+                <Text style={styles.cardSubtitle}>{item.details}</Text>
               </View>
-            </TouchableOpacity>
+            </View>
           )}
         />
       )}
-
-      {/* Bottom Nav Fixed */}
-      <View style={[styles.bottomNav, { backgroundColor: colors.card }]}>
-        <TouchableOpacity 
-          style={styles.navItem} 
-          onPress={() => navigation.navigate('Home')}
-        >
-          <Ionicons name="home" size={24} color={colors.text} />
-          <Text style={[styles.navText, { color: colors.text, textDecorationLine: 'underline' }]}>Home</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.navItem}>
-          <MaterialCommunityIcons name="history" size={24} color="#5F8D8B" />
-          <Text style={[styles.navText, { color: "#5F8D8B", textDecorationLine: 'underline' }]}>History</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity 
-          style={styles.navItem} 
-          onPress={() => navigation.navigate('Settings')}
-        >
-          <Ionicons name="settings-outline" size={24} color={colors.subText} />
-          <Text style={[styles.navText, { color: colors.subText }]}>Settings</Text>
-        </TouchableOpacity>
-      </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 15, paddingVertical: 12 },
-  headerTitle: { fontSize: 20, fontWeight: '700' },
-  empty: { flex: 1, justifyContent: "center", alignItems: "center" },
-  emptyText: { fontSize: 16, marginTop: 10 },
-  card: { flexDirection: "row", borderRadius: 12, padding: 12, marginBottom: 12, width: width - 30, alignSelf: 'center', elevation: 2 },
-  image: { width: 65, height: 65, borderRadius: 8 },
-  cardTitle: { fontSize: 16, fontWeight: "600" },
-  details: { marginTop: 5, fontSize: 13 },
-  bottomNav: { flexDirection: 'row', justifyContent: 'space-around', paddingVertical: 12, borderTopWidth: 1, borderTopColor: '#ddd', position: 'absolute', bottom: 0, left: 0, right: 0 },
-  navItem: { alignItems: 'center' },
-  navText: { fontSize: 12, marginTop: 4, fontWeight: '500' },
+  container: {
+    flex: 1,
+    backgroundColor: "#F4F5F6",
+    paddingHorizontal: scale(16),
+  },
+
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: verticalScale(10),
+    marginTop: verticalScale(5),
+  },
+
+  headerTitle: {
+    fontSize: responsiveFont(16),
+    fontWeight: "700",
+    color: "#333",
+  },
+
+  empty: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  emptyText: {
+    marginTop: verticalScale(10),
+    fontSize: responsiveFont(14),
+    color: "#777",
+  },
+
+  card: {
+    flexDirection: "row",
+    backgroundColor: "#fff",
+    padding: scale(12),
+    borderRadius: scale(14),
+    marginBottom: verticalScale(12),
+    elevation: 3,
+  },
+
+  image: {
+    width: scale(65),
+    height: scale(65),
+    borderRadius: scale(10),
+  },
+
+  cardTitle: {
+    fontSize: responsiveFont(16),
+    fontWeight: "600",
+    color: "#333",
+  },
+
+  cardSubtitle: {
+    marginTop: verticalScale(4),
+    fontSize: responsiveFont(12),
+    color: "#777",
+  },
 });
 
 export default HistoryScreen;

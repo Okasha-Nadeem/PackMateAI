@@ -1,7 +1,17 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, ScrollView, SafeAreaView } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useScans } from '../Context/ScanContext';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  TextInput,
+  ScrollView,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Ionicons } from "@expo/vector-icons";
+import { useScans } from "../Context/ScanContext";
+import { scale, verticalScale, responsiveFont } from "../utils/responsive";
 
 const VerificationScreen = ({ navigation, route }) => {
   const { addScan } = useScans();
@@ -17,28 +27,31 @@ const VerificationScreen = ({ navigation, route }) => {
       imageUri,
       weight,
       material,
-      details: `Dimensions: 14.5 × 8.2 cm | Weight: ${weight}`
+      details: `Dimensions: 14.5 × 8.2 cm | Weight: ${weight}`,
     };
 
-    addScan(scanData); // SAVE to history
+    addScan(scanData);
     navigation.navigate("Results");
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      
-      {/* Header */}
+    <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
+      {/* HEADER */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="chevron-back" size={28} color="#333" />
+          <Ionicons name="chevron-back" size={scale(24)} color="#333" />
         </TouchableOpacity>
+
         <Text style={styles.headerTitle}>VERIFICATION</Text>
-        <View style={{ width: 28 }} />
+
+        <View style={{ width: scale(24) }} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.content}>
-        
-        {/* Image preview */}
+      <ScrollView
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* IMAGE PREVIEW */}
         <View style={styles.imageContainer}>
           {imageUri ? (
             <Image source={{ uri: imageUri }} style={styles.capturedImage} />
@@ -46,11 +59,10 @@ const VerificationScreen = ({ navigation, route }) => {
             <Text>No image found</Text>
           )}
 
-          {/* AI Box */}
           <View style={styles.boundingBox} />
         </View>
 
-        {/* Product name */}
+        {/* PRODUCT NAME */}
         <View style={styles.formGroup}>
           <Text style={styles.label}>Product Name (for history)</Text>
           <TextInput
@@ -60,7 +72,7 @@ const VerificationScreen = ({ navigation, route }) => {
           />
         </View>
 
-        {/* Weight */}
+        {/* WEIGHT */}
         <View style={styles.formGroup}>
           <Text style={styles.label}>Weight</Text>
           <TextInput
@@ -70,75 +82,122 @@ const VerificationScreen = ({ navigation, route }) => {
           />
         </View>
 
-        {/* Material */}
+        {/* MATERIAL */}
         <View style={styles.formGroup}>
           <Text style={styles.label}>Material Type</Text>
           <View style={styles.picker}>
             <Text style={styles.pickerText}>{material}</Text>
-            <Ionicons name="chevron-down" size={20} color="#555" />
+            <Ionicons name="chevron-down" size={scale(18)} color="#555" />
           </View>
         </View>
 
-        {/* Analyze button */}
-        <TouchableOpacity style={styles.analyzeBtn} onPress={handleAnalyzeAndSave}>
+        {/* ANALYZE BUTTON */}
+        <TouchableOpacity
+          style={styles.analyzeBtn}
+          onPress={handleAnalyzeAndSave}
+        >
           <Text style={styles.analyzeText}>ANALYZE PACKAGING</Text>
         </TouchableOpacity>
-
       </ScrollView>
-
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#F8F9FA" },
-  header: { flexDirection: "row", justifyContent: "space-between", padding: 20 },
-  headerTitle: { fontSize: 16, fontWeight: "700" },
-  content: { padding: 20 },
-  imageContainer: {
-    height: 350,
-    backgroundColor: "#ddd",
-    borderRadius: 12,
-    overflow: "hidden",
-    marginBottom: 20,
+  container: {
+    flex: 1,
+    backgroundColor: "#F8F9FA",
+    paddingHorizontal: scale(16),
   },
-  capturedImage: { width: "100%", height: "100%" },
+
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: verticalScale(14),
+    alignItems: "center",
+  },
+
+  headerTitle: {
+    fontSize: responsiveFont(16),
+    fontWeight: "700",
+    color: "#333",
+  },
+
+  content: {
+    paddingBottom: verticalScale(60),
+  },
+
+  imageContainer: {
+    height: verticalScale(320),
+    backgroundColor: "#ddd",
+    borderRadius: scale(14),
+    overflow: "hidden",
+    marginBottom: verticalScale(20),
+  },
+
+  capturedImage: {
+    width: "100%",
+    height: "100%",
+  },
+
   boundingBox: {
     position: "absolute",
-    top: "20%",
-    left: "20%",
-    width: "60%",
-    height: "60%",
-    borderWidth: 3,
+    top: "18%",
+    left: "18%",
+    width: "65%",
+    height: "65%",
+    borderWidth: scale(3),
     borderColor: "#4285F4",
   },
-  formGroup: { marginBottom: 15 },
-  label: { fontWeight: "600", marginBottom: 6 },
+
+  formGroup: {
+    marginBottom: verticalScale(16),
+  },
+
+  label: {
+    fontSize: responsiveFont(13),
+    fontWeight: "600",
+    marginBottom: verticalScale(6),
+    color: "#333",
+  },
+
   input: {
     backgroundColor: "#fff",
-    padding: 12,
-    borderRadius: 10,
+    padding: verticalScale(12),
+    borderRadius: scale(10),
     borderWidth: 1,
     borderColor: "#ccc",
+    fontSize: responsiveFont(14),
   },
+
   picker: {
     backgroundColor: "#fff",
-    padding: 12,
-    borderRadius: 10,
+    padding: verticalScale(12),
+    borderRadius: scale(10),
     flexDirection: "row",
     justifyContent: "space-between",
     borderWidth: 1,
     borderColor: "#ccc",
   },
-  pickerText: { fontSize: 16 },
+
+  pickerText: {
+    fontSize: responsiveFont(14),
+    color: "#333",
+  },
+
   analyzeBtn: {
     backgroundColor: "#5F8D8B",
-    padding: 16,
-    marginTop: 10,
-    borderRadius: 12,
+    padding: verticalScale(14),
+    borderRadius: scale(14),
     alignItems: "center",
+    marginTop: verticalScale(10),
   },
-  analyzeText: { color: "#fff", fontWeight: "700" },
+
+  analyzeText: {
+    color: "#fff",
+    fontSize: responsiveFont(15),
+    fontWeight: "700",
+  },
 });
 
 export default VerificationScreen;

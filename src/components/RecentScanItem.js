@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
+import { scale, verticalScale, moderateScale, responsiveFont } from '../utils/responsive';
 
-// Helper function
+// Helper function to format date
 const formatDate = (date) => {
   return new Date(date).toLocaleDateString('en-US', {
     year: 'numeric',
@@ -37,21 +38,50 @@ const styles = StyleSheet.create({
   recentItem: {
     flexDirection: "row",
     backgroundColor: "#fff",
-    padding: 15,
-    borderRadius: 15,
-    marginBottom: 15,
+    padding: scale(14),
+    borderRadius: scale(15),
+    marginBottom: verticalScale(12),
     alignItems: "center",
     shadowColor: "#000",
     shadowOpacity: 0.05,
-    shadowRadius: 5,
+    shadowRadius: scale(5),
     elevation: 2,
   },
-  recentImage: { width: 60, height: 60, borderRadius: 10, backgroundColor: "#eee" },
-  recentInfo: { marginLeft: 15, flex: 1 },
-  recentTitle: { fontSize: 16, fontWeight: "bold", color: "#333" },
-  recentDesc: { fontSize: 13, color: "#888", marginTop: 3 },
-  recentDateContainer: { marginLeft: 10 },
-  recentDate: { fontSize: 10, color: "#999", fontWeight: "500" }
+
+  recentImage: {
+    width: scale(60),
+    height: scale(60),
+    borderRadius: scale(10),
+    backgroundColor: "#eee",
+  },
+
+  recentInfo: {
+    marginLeft: scale(15),
+    flex: 1,
+  },
+
+  // 🔥 Responsive font size applied here
+  recentTitle: {
+    fontSize: responsiveFont(16),
+    fontWeight: "bold",
+    color: "#333",
+  },
+
+  recentDesc: {
+    fontSize: responsiveFont(13),
+    color: "#888",
+    marginTop: verticalScale(3),
+  },
+
+  recentDateContainer: {
+    marginLeft: scale(10),
+  },
+
+  recentDate: {
+    fontSize: responsiveFont(10),
+    color: "#999",
+    fontWeight: "500",
+  },
 });
 
 export default RecentScanItem;
